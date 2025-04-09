@@ -34,3 +34,15 @@ python database.py
 - `BEGIN` - начало транзакции.
 - `ROLLBACK` - откат текущей (самой внутренней) транзакции
 - `COMMIT` - фиксация изменений текущей (самой внутренней) транзакции
+
+# Тестирование
+
+В проекте созданы тесты с бибилиотекой [pytest](https://docs.pytest.org/en/stable/getting-started.html)
+
+Для запуска тестов создайте [виртуальное окружение](https://docs.python.org/3/library/venv.html), активируйте его, затем скачайте зависимости `pip install -r requirements.txt`
+
+Для запуска тестов введите команду 
+
+``` shell
+pytest -q test_database.py 
+```
