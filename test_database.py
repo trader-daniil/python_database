@@ -6,15 +6,13 @@ import pytest
 def database():
     """Создадим объект БД."""
     database = DataBase()
-    print(database)
     return database
 
 @pytest.fixture()
 def transaction():
-    """Создадим объект БД."""
-    database = DataBase()
-    print(database)
-    return database
+    """Создадим объект Транзакции."""
+    transaction = Transaction()
+    return transaction
 
 def test_create(database):
     """Проверяем создание объекта"""
@@ -39,4 +37,30 @@ def test_search_keys(database):
     database.set(*('B', 10))
     assert database.find(*(10,)) == 'A B'
 
+def test_create_transaction(database, transaction):
+    """Проверим создание транзакции без применения."""
+    set_action = getattr(database, 'set')
+    transaction.add_action(set_action, *('A', 10))
+    transaction.add_action(set_action, *('B', 20))
+    assert database.get(*('A',)) ==  'NULL'
+
+def test_apply_transaction(database, transaction):
+    """Проверим создание траназакции с применением."""
+    set_action = getattr(database, 'set')
+    transaction.add_action(set_action, *('A', 10))
+    transaction.add_action(set_action, *('B', 20))
+    transaction.execute()
+    assert database.get(*('A',)) ==  10
+    assert database.get(*('B',)) ==  20
+
+def test_nested_transaction(database, transaction):
+    """Проверим создание внутренней транзакции."""
+    set_action = getattr(database, 'set')
+    transaction.add_action(set_action, *('A', 10))
+    transaction.add_action(set_action, *('B', 20))
+    nested_transaction = Transaction()
+    nested_transaction.add_action(set_action, *('F', 30))
+    nested_transaction.execute()
+    assert database.get(*('A',)) ==  'NULL'
+    assert database.get(*('F',)) == 30
 
