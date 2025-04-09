@@ -1,6 +1,5 @@
 import sys
 
-transaction = []
 
 class Transaction:
     
@@ -14,7 +13,6 @@ class Transaction:
                 'args': args,
             }
         )
-        print(self.commands)
 
     def execute(self):
         for command in self.commands:
@@ -30,7 +28,6 @@ class DataBase:
     
     def set(self, *args) -> None:
         """Создаем значение в БД по ключу."""
-        print(args)
         key, value = args
         self.data[key] = value
 
@@ -95,7 +92,6 @@ def run_transaction(transaction, database, actions):
             action,
             *argue,
         )
-
 
 
 def main():
