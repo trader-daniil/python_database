@@ -1,4 +1,5 @@
 import sys
+from methods import ALL_METHODS, RECIEVE_METHODS
 
 
 class Transaction:
@@ -73,9 +74,20 @@ def run_transaction(transaction, database, actions):
         data = input()
         data = data.split()
         command = data[0]
-        if command.upper() == 'BREAK':
+        if command.upper() not in ALL_METHODS:
+            continue
+        elif command.upper() == 'BREAK':
             sys.exit()
+        elif command.upper() in RECIEVE_METHODS:
+            # Если действие на получение значения, то исполняем
+            argue = data[1:]
+            action = actions[command]
+            result = action(*argue)
+            if result is not None:
+                print(result)
+            continue
         elif command == 'BEGIN':
+            # Создание вложенной транзакции
             new_transaction = Transaction()
             run_transaction(
                 transaction=new_transaction,
@@ -84,8 +96,10 @@ def run_transaction(transaction, database, actions):
             )
             continue
         elif command == 'COMMIT':
+            # Завершение и исполнение транзакции
             transaction.execute()
             break
+        # Если действие на создание, то добавляем в транзакцию
         argue = data[1:]
         action = actions[command]
         transaction.add_action(
@@ -108,7 +122,9 @@ def main():
         data = input()
         data = data.split()
         command = data[0]
-        if command.upper() == 'BREAK':
+        if command.upper() not in ALL_METHODS:
+            continue
+        elif command.upper() == 'BREAK':
             break
         elif command.upper() == 'BEGIN':
             transaction = Transaction()
