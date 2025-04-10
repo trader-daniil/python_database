@@ -73,7 +73,11 @@ def run_transaction(transaction, database, actions):
     while True:
         data = input()
         data = data.split()
-        command = data[0]
+        try:
+            # Пропускаем пустую строку
+            command = data[0]
+        except IndexError:
+            continue
         if command.upper() not in ALL_METHODS:
             continue
         elif command.upper() == 'BREAK':
@@ -117,11 +121,14 @@ def main():
         'UNSET': getattr(database, 'unset'),
         'FIND': getattr(database, 'find'),
     }
-  
     while True:
         data = input()
         data = data.split()
-        command = data[0]
+        try:
+            # Пропускаем пустую строку
+            command = data[0]
+        except IndexError:
+            continue
         if command.upper() not in ALL_METHODS:
             continue
         elif command.upper() == 'BREAK':
